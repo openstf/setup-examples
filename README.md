@@ -155,3 +155,37 @@ fleetctl submit ./unit_files/stf-triproxy-dev.service
 fleetctl start stf-triproxy-dev
 ```
 After running this service note the IP of the machine on which this unit is running by `fleetctl list-units` command. From now, we will call this IP as devside.stf.mydomain.org
+
+#### stf-storage-plugin-apk@.service
+The APK storage plugin loads raw blobs from the main storage unit and allows additional actions to be performed on APK files, such as retrieving the AndroidManifest.xml.
+
+It can have many instances running on same or different host using different port. But in this example, we will run only one unit on 3300 port.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-storage-plugin-apk@.service
+fleetctl start stf-storage-plugin-apk@3300
+```
+
+#### stf-storage-plugin-image@.service
+The image storage plugin loads raw blobs from the main storage unit and and allows images to be resized using parameters.
+
+It can have many instances running on same or different host using different port. But in this example, we will run only one unit on 3400 port.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-storage-plugin-image@.service
+fleetctl start stf-storage-plugin-image@3400
+```
+
+#### stf-storage-temp@.service
+It can have many instances running on same or different host using different port. But in this example, we will run only one unit on 3500 port.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-storage-temp@.service
+fleetctl start stf-storage-temp@3500
+```
