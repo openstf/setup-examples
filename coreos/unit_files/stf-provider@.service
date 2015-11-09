@@ -1,0 +1,30 @@
+[Unit]
+Description=STF provider
+After=adbd.service
+BindsTo=adbd.service
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStart=/usr/bin/docker run --rm \
+  --name %p-%i \
+  --net host \
+  openstf/stf:latest \
+  stf provider \
+    --name "%H/%i" \
+    --connect-sub tcp://${devside.stf.mydomain.org}:7250 \
+    --connect-push tcp://${devside.stf.mydomain.org}:7270 \
+    --storage-url http://stf.mydomain.org \
+    --public-ip ${COREOS_PRIVATE_IPV4} \
+    --min-port=15000 \
+    --max-port=15500 \
+    --heartbeat-interval 10000 \
+    --screen-ws-url-pattern "ws://stf.mydomain.org/d/%i/<%= serial %>/<%= publicPort %>/"
+ExecStop=-/usr/bin/docker stop -t 10 %p-%i
+
+[X-Fleet]
+Conflicts=stf-provider@*.service

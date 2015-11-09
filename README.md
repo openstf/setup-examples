@@ -229,3 +229,15 @@ Start service using
 fleetctl submit unit_files/stf-reaper.service
 fleetctl start stf-reaper
 ```
+
+#### stf-provider@.service
+The provider unit connects to ADB and start worker processes for each device. It then sends and receives commands from the processor.
+
+Before starting service, first we need to update reaper unit file to use appside.stf.mydomain.org and devside.stf.mydomain.org IP addresses we noted above. Update [stf-provider@.service](coreos/unit_files/stf-provider@.service) unit file.
+
+Start service using
+
+```sh
+fleetctl submit unit_files/stf-provider@.service
+fleetctl start stf-provider@{1..3}
+```
