@@ -88,3 +88,27 @@ adbd.service	6e3e7dc2.../172.17.8.101	active	running
 adbd.service	9821f508.../172.17.8.102	active	running
 adbd.service	ab5747a8.../172.17.8.103	active	running
 ```
+
+#### rethinkdb-proxy-28015.service
+You need a single instance of the rethinkdb-proxy-28015.service unit on each host where you have another unit that needs to access the database. In this example we will run this unit on all host by setting `Global=true` parameter in [rethinkdb-proxy-28015.service](coreos/unit_files/rethinkdb-proxy-28015.service) unit file.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/rethinkdb-proxy-28015.service
+fleetctl start rethinkdb-proxy-28015
+```
+
+#### stf-migrate.service
+This unit creates database and tables necessary for STF. This is a oneshot unit, meaning that it shuts down after it's done.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-migrate.service
+fleetctl start stf-migrate
+```
+Again, this unit will take time to start since, it will be downloading stf docker image for the first time.
+
+Once the service is done, go to the rethinkdb admin console (http://198.162.50.11:8080/) and check if you can see [devices, logs, users, vncauth] tables in "Tables" tab.
+ 

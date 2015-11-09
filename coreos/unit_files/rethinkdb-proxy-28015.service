@@ -1,0 +1,21 @@
+[Unit]
+Description=RethinkDB proxy/28015
+After=docker.service
+Requires=docker.service
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull openstf/ambassador:latest
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStart=/usr/bin/docker run --rm \
+  --name %p \
+  -p 28015 \
+  -e RETHINKDB_PORT_28015_TCP=tcp://198.162.50.11:28015 \
+  openstf/ambassador:latest
+ExecStop=-/usr/bin/docker stop -t 10 %p
+
+[X-Fleet]
+Global=true
