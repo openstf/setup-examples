@@ -10,6 +10,7 @@ coreos:
     discovery: https://discovery.etcd.io/<token>
   fleet:
     public-ip: $public_ipv4
+    metadata: <metadata>
   flannel:
     interface: $public_ipv4
   units:
