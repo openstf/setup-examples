@@ -69,3 +69,22 @@ ab5747a8... 172.17.8.103 -
 ```
 
 Now, your CoreOS cluster is ready to deploy STF Components.
+
+### Deploy STF Components
+#### adbd.service
+You need to have a single `adbd.service` unit running on each host where devices are connected.`Global=true` X-Fleet parameter in [adbd.service](coreos/unit_files/adbd.service) will make it run on each cluster host.
+
+Deploy using below command
+
+```sh
+fleetctl submit ./unit_files/adbd.service
+fleetctl start adbd
+```
+It will take `adbd.service` some time to start on each host. Once it is done, you can check by running `fleetctl list-units` command. You will see
+
+```sh
+UNIT		MACHINE				ACTIVE	SUB
+adbd.service	6e3e7dc2.../172.17.8.101	active	running
+adbd.service	9821f508.../172.17.8.102	active	running
+adbd.service	ab5747a8.../172.17.8.103	active	running
+```
