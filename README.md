@@ -201,3 +201,17 @@ Start service using
 fleetctl submit unit_files/stf-processor@.service
 fleetctl start stf-processor@{1..3}.service
 ```
+
+#### stf-websocket@.service
+The websocket unit provides the communication layer between client-side JavaScript and the server-side ZeroMQ+Protobuf combination. Almost every action in STF goes through the websocket unit.
+
+Before starting service, first we need to update processor unit file to use appside.stf.mydomain.org IP addresses we noted above. Update [stf-websocket@.service](coreos/unit_files/stf-websocket@.service) unit file.
+
+It can have many instances running on same or different host using different port. But in this example, we will run only one unit.
+
+Start service using
+
+```sh
+fleetctl submit unit_files/stf-websocket@.service
+fleetctl start stf-websocket@3600.service
+```

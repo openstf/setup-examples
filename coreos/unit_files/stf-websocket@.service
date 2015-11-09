@@ -1,0 +1,23 @@
+[Unit]
+Description=STF websocket
+After=rethinkdb-proxy-28015.service
+BindsTo=rethinkdb-proxy-28015.service
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStart=/usr/bin/docker run --rm \
+  --name %p-%i \
+  --link rethinkdb-proxy-28015:rethinkdb \
+  -e "SECRET=answeri$42" \
+  -p %i:3000 \
+  openstf/stf:latest \
+  stf websocket --port 3000 \
+    --storage-url http://stf.mydomain.org/ \
+    --connect-sub tcp://${appside.stf.mydomain.org}:7150 \
+    --connect-push tcp://${appside.stf.mydomain.org}:7170
+ExecStop=/usr/bin/docker stop -t 10 %p-%i
