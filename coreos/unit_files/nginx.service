@@ -1,0 +1,20 @@
+[Unit]
+Description=STF nginx public load balancer
+After=docker.service
+Requires=docker.service
+ConditionPathExists=/srv/nginx/nginx.conf
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull nginx:1.7.10
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStart=/usr/bin/docker run --rm \
+  --name %p \
+  --net host \
+  -v /srv/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
+  nginx:1.7.10 \
+  nginx
+ExecStop=/usr/bin/docker stop -t 2 %p

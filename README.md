@@ -241,3 +241,36 @@ Start service using
 fleetctl submit unit_files/stf-provider@.service
 fleetctl start stf-provider@{1..3}
 ```
+
+#### nginx.service
+Now, its time to run our nginx server. First, update the [nginx.conf](coreos/nginx.conf) file. Run `fleetctl list-units` and check which server is running on which host and update upstream IP Address for stf_app, stf_auth, stf_storage, stf_storage_apk, stf_storage_image and stf_websocket.
+
+To start nginx server we with use systemctl instead of fleetctl.
+
+Firt login to one of the machine.
+
+```sh
+vagrant ssh core-01
+```
+
+Create a new file /srv/nginx/nginx.conf and paste the updated [nginx.conf](coreos/nginx.conf)
+Create a new file /etc/systemd/system/nginx.service and paste [nginx.service](coreos/unit_files/nginx.service)
+
+Start nginx using
+
+```sh
+sudo systemctl start nginx
+```
+
+Exit from ssh session
+
+```
+exit
+```
+
+Add this line in your `/etc/hosts` file
+```
+172.17.8.101 stf.mydomain.org
+```
+
+Now open browser and open http://stf.mydomain.org. You should be able to see STF login page.
