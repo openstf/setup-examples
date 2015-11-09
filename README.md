@@ -189,3 +189,15 @@ Start service using
 fleetctl submit ./unit_files/stf-storage-temp@.service
 fleetctl start stf-storage-temp@3500
 ```
+
+#### stf-processor@.service
+The processor is the main workhorse of STF. It acts as a bridge between the devices and the app, and nearly all communication goes through it. It is better to use have more units of this running. In this example, I will run processor on all hosts.
+
+Before starting service, first we need to update processor unit file to use appside.stf.mydomain.org and devside.stf.mydomain.org IP addresses we noted above. Update [stf-processor@.service](coreos/unit_files/stf-processor@.service) unit file.
+
+Start service using
+
+```sh
+fleetctl submit unit_files/stf-processor@.service
+fleetctl start stf-processor@{1..3}.service
+```
