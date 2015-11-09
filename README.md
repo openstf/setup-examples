@@ -111,4 +111,25 @@ fleetctl start stf-migrate
 Again, this unit will take time to start since, it will be downloading stf docker image for the first time.
 
 Once the service is done, go to the rethinkdb admin console (http://198.162.50.11:8080/) and check if you can see [devices, logs, users, vncauth] tables in "Tables" tab.
- 
+
+#### stf-app@.service
+This unit provides the main HTTP server. It can have many instances running on same or different host using different port. But in this example, we will run only one unit.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-app@.service
+fleetctl start stf-app@3100
+```
+This will run stf-app at 3100 port on one of the server. You can check where it is running by `fleetctl list-units` command.
+
+#### stf-auth@.service
+This unit is responsible for authorizing the user. STF provides [many options](https://github.com/openstf/stf/blob/master/doc/DEPLOYMENT.md#stf-authservice) for this. In this example we will use mock login.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-auth@.service
+fleetctl start stf-auth@3200
+```
+This will run stf-app at 3200 port on one of the server. You can check where it is running by `fleetctl list-units` command.
