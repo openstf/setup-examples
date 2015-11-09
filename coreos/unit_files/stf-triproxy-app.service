@@ -1,0 +1,21 @@
+[Unit]
+Description=STF app triproxy
+After=docker.service
+Requires=docker.service
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStart=/usr/bin/docker run --rm \
+  --name %p \
+  --net host \
+  openstf/stf:latest \
+  stf triproxy app \
+    --bind-pub "tcp://*:7150" \
+    --bind-dealer "tcp://*:7160" \
+    --bind-pull "tcp://*:7170"
+ExecStop=-/usr/bin/docker stop -t 10 %p

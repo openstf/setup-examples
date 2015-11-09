@@ -133,3 +133,25 @@ fleetctl submit ./unit_files/stf-auth@.service
 fleetctl start stf-auth@3200
 ```
 This will run stf-app at 3200 port on one of the server. You can check where it is running by `fleetctl list-units` command.
+
+#### stf-triproxy-app.service
+This unit provide triproxy service for application side.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-triproxy-app.service
+fleetctl start stf-triproxy-app
+```
+After running this service note the IP of the machine on which this unit is running by `fleetctl list-units` command. From now, we will call this IP as appside.stf.mydomain.org
+
+#### stf-triproxy-dev.service
+This unit provide triproxy service for device side.
+
+Start service using
+
+```sh
+fleetctl submit ./unit_files/stf-triproxy-dev.service
+fleetctl start stf-triproxy-dev
+```
+After running this service note the IP of the machine on which this unit is running by `fleetctl list-units` command. From now, we will call this IP as devside.stf.mydomain.org
