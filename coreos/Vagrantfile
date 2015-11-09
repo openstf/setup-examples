@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# -*- coding: utf-8 -*-
+
+require 'fileutils'
+
+require './coreos_config.rb'
+
+Vagrant.require_version '>= 1.6.0'
+
+CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), 'user-data')
+
+Vagrant.configure('2') do |config|
+  # always use Vagrants insecure key
+  config.ssh.insert_key = false
+
+  config.vm.box = "coreos-%s" % $update_channel
+  if $image_version != 'current'
+      config.vm.box_version = $image_version
+  end
+  config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/%s/coreos_production_vagrant.json" % [$update_channel, $image_version]
+
+  config.vm.provider :virtualbox do |v|
+    # On VirtualBox, we don't have guest additions or a functional vboxsf
+    # in CoreOS, so tell Vagrant that so it can be smarter.
+    v.check_guest_additions = false
+    v.functional_vboxsf     = false
+  end
+
+  (1..$num_instances).each do |i|
+    config.vm.define vm_name = "%s-%02d" % [$instance_name_prefix, i] do |config|
+      config.vm.hostname = vm_name
+
+      if $enable_serial_logging
+        logdir = File.join(File.dirname(__FILE__), 'log')
+        FileUtils.mkdir_p(logdir)
+
+        serialFile = File.join(logdir, "%s-serial.txt" % vm_name)
+        FileUtils.touch(serialFile)
+      end
+
+      $forwarded_ports.each do |guest, host|
+        config.vm.network 'forwarded_port', guest: guest, host: host, auto_correct: true
+      end
+
+      config.vm.provider :virtualbox do |v|
+        v.name = vm_name
+        v.memory = $vm_memory
+        v.cpus = $vm_cpus
+      end
+
+      ip = "172.17.8.#{ i+100 }"
+      config.vm.network :private_network, ip: ip
+
+      # cloudconfig-init
+      config.vm.provision :file, :source => "#{ CLOUD_CONFIG_PATH }", :destination => '/tmp/vagrantfile-user-data'
+      config.vm.provision :shell, :inline => 'mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/', :privileged => true
+    end
+  end
+end

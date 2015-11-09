@@ -1,3 +1,4 @@
+# -*- mode: ruby -*-
 # -*- coding: utf-8 -*-
 
 ## Ubuntun VM Private IP Address where rethinkdb will run
