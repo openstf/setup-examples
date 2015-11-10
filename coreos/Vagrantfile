@@ -50,6 +50,7 @@ Vagrant.configure('2') do |config|
 
       config.vm.network :private_network, ip: node[:ip]
 
+      ## Provisioning
       # cloudconfig-init
       data = YAML.load(IO.readlines('user-data')[1..-1].join)
 
@@ -65,8 +66,15 @@ Vagrant.configure('2') do |config|
       FileUtils.rm source_file if File.exists?(source_file)
       File.open(source_file, 'w') { |file| file.write("#cloud-config\n\n#{ yaml }") }
 
-      config.vm.provision :file, :source => source_file, :destination => '/tmp/vagrantfile-user-data'
-      config.vm.provision :shell, :inline => 'mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/', :privileged => true
+      config.vm.provision :file, source: source_file, destination: '/tmp/vagrantfile-user-data'
+      config.vm.provision :shell, inline: 'mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/', privileged: true
+
+      if node[:metadata] == 'role=nginx'
+        nginx_conf_file = File.join(File.dirname(__FILE__), 'nginx.conf')
+        config.vm.provision :file, source: nginx_conf_file, destination: '/tmp/nginx.conf'
+        config.vm.provision :shell, inline: 'mkdir -p /srv/nginx', privileged: true
+        config.vm.provision :shell, inline: 'mv /tmp/nginx.conf /srv/nginx/nginx.conf', privileged: true
+      end
     end
   end
 end
