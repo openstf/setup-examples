@@ -176,4 +176,16 @@ Unit stf-websocket@.service inactive
 
 Now open browser and open http://172.17.8.101. You should be able to see STF login page.
 
+**Optional** In case, if you want to use your domain name instead of IP Address for STF URL. Do following things.
+1. Register host in your `/etc/hosts` file.
+
+  Add this in `/etc/hosts` file
+
+  ```
+  172.17.8.101  stf.example.org
+  ```
+
+2. Change `--storage-url`, `--app-url` & `--auth-url` in unit files with domain name.
+3. Restart updated services. And now you should be able to see STF on http://stf.example.org
+
 Enjoy STF!
