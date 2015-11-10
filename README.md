@@ -9,10 +9,10 @@ This project will provide various setup examples for STF in production environme
   - [STF README](https://github.com/openstf/stf/blob/master/README.md)
   - [STF DEPLOYMENT DOC](https://github.com/openstf/stf/blob/master/doc/DEPLOYMENT.md)
 - You are on OS X
-  - *Theoritically this can be done on any OS which supports VirtualBox and Vagrant but they haven't been confirmed*
+  - *Theoritically this can be done on any OS which supports VirtualBox and Vagrant but they haven't been confirmed yet!*
 
 ## Requirements
-- [VirtualBox](https://www.virtualbox.org/) >= 5.0.0
+- [VirtualBox](https://www.virtualbox.org/) >= 5.4.0
 - [Vagrant](https://www.vagrantup.com/) >= 1.7.3
 
 ## Setup Architecture
@@ -24,7 +24,7 @@ Before going any further, I am going to give you a brief idea about what kind of
 
 ![stf_cluster_architecture](docs/stf_cluster_architecture.png)
 
-We will be creating these clusters using Vagrant and VirtualBox. And then deploy various software components on these clusters. By the end of these tutorial, you will have a running STF on your VMs which you will be able to access on http://stf.mydomain.org from your browser. Stay Excited!
+We will be creating these clusters using Vagrant and VirtualBox. And then deploy various software components on these clusters. By the end of this tutorial, you will have a running STF on your VMs which you will be able to access on http://172.17.8.101 from your browser. Stay Excited!
 
 ## Setup
 
@@ -38,15 +38,15 @@ cd stf-setup-examples
 Lets create rethinkdb cluster. Go to the `db` folder and run `vagrant up`. Yeah, thats it.
 
 ```sh
-cd ./db
-vagrant up
+cd ./db; vagrant up
 ```
+
 Above command will do following things
 - Download **ubuntu/trusty64** image if image is not present (*this may take time depending on internet speed*)
-- Launch Ubuntu VM and set its IP to `$rethinkdb_host_ip` configured in [Configuration File](config.rb) (**Default: 198.162.50.11**)
+- Launch Ubuntu VM and set its IP to `198.162.50.11`
 - Install and run rethinkdb server
 
-You can confirm if rethinkdb is up by visiting rethinkdb admin console (http://198.162.50.11:8080 or http://RETHINKDB_HOST_IP:8080)
+You can confirm if rethinkdb is up by visiting rethinkdb [admin console](http://198.162.50.11:8080)
 
 Please have a look at [Vagrantfile](db/Vagrantfile) to have better understanding about what is happening.
 

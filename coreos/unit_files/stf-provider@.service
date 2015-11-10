@@ -18,12 +18,12 @@ ExecStart=/usr/bin/docker run --rm \
     --name "%H/%i" \
     --connect-sub tcp://172.17.8.103:7250 \
     --connect-push tcp://172.17.8.103:7270 \
-    --storage-url http://stf.mydomain.org \
+    --storage-url http://172.17.8.101/ \
     --public-ip ${COREOS_PRIVATE_IPV4} \
     --min-port=15000 \
     --max-port=15500 \
     --heartbeat-interval 10000 \
-    --screen-ws-url-pattern "ws://stf.mydomain.org/d/%i/<%= serial %>/<%= publicPort %>/"
+    --screen-ws-url-pattern "ws://172.17.8.101/d/%i/<%= serial %>/<%= publicPort %>/"
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
 
 [X-Fleet]

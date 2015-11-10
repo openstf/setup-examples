@@ -16,5 +16,5 @@ ExecStart=/usr/bin/docker run --rm \
   -p %i:3000 \
   openstf/stf:latest \
   stf auth-mock --port 3000 \
-    --app-url http://stf.mydomain.org/
+    --app-url http://172.17.8.101/
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i

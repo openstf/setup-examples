@@ -1,11 +1,14 @@
 # -*- mode: ruby -*-
 # -*- coding: utf-8 -*-
 
-require '../config.rb'
-
 Vagrant.require_version '>= 1.6.0'
 
+rethinkdb_host_ip = '198.162.50.11'
+
 Vagrant.configure(2) do |config|
+  # always use Vagrants insecure key
+  config.ssh.insert_key = false
+
   # Ubuntu 14.04, 64 bit
   config.vm.box         = 'ubuntu/trusty64'
   config.vm.box_version = '~> 14.04'
@@ -17,16 +20,8 @@ Vagrant.configure(2) do |config|
     v.customize ['modifyvm', :id, '--memory', '512', '--ioapic', 'on']
   end
 
-  # SSH
-  config.ssh.username = 'vagrant'
-
-  # # Forward port in case of debugging
-  # config.vm.network :forwarded_port, guest: 8080,  host: 8080    # For Admin app
-  # config.vm.network :forwarded_port, guest: 28015, host: 28015   # For client drivers
-  # config.vm.network :forwarded_port, guest: 29015, host: 29015   # For Intracluster connections
-
   # Static IP
-  config.vm.network :private_network, ip: $rethinkdb_host_ip
+  config.vm.network :private_network, ip: rethinkdb_host_ip
 
   # Provisioning
   config.vm.provision :shell do |sh|
