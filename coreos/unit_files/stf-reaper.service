@@ -15,7 +15,7 @@ ExecStart=/usr/bin/docker run --rm \
   --link rethinkdb-proxy-28015:rethinkdb \
   openstf/stf:latest \
   stf reaper dev \
-    --connect-push tcp://${devside.stf.mydomain.org}:7270 \
-    --connect-sub tcp://${appside.stf.mydomain.org}:7150 \
+    --connect-push tcp://172.17.8.103:7270 \
+    --connect-sub tcp://172.17.8.102:7150 \
     --heartbeat-timeout 30000
 ExecStop=-/usr/bin/docker stop -t 10 %p

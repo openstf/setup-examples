@@ -15,8 +15,8 @@ ExecStart=/usr/bin/docker run --rm \
   --link rethinkdb-proxy-28015:rethinkdb \
   openstf/stf:latest \
   stf processor %p-%i \
-    --connect-app-dealer tcp://${appside.stf.mydomain.org}:7160 \
-    --connect-dev-dealer tcp://${devside.stf.mydomain.org}:7260
+    --connect-app-dealer tcp://172.17.8.102:7160 \
+    --connect-dev-dealer tcp://172.17.8.103:7260
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
 
 [X-Fleet]
