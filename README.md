@@ -50,7 +50,7 @@ You can confirm if rethinkdb is up by visiting rethinkdb [admin console](http://
 
 Please have a look at [Vagrantfile](db/Vagrantfile) to have better understanding about what is happening.
 
-TODO: Use 2 instances of VM for rethinkdb if somebody complains that this is not a real cluster :P
+**TODO**: Use 2 instances of VM for rethinkdb if somebody complains that this is not a real cluster :P
 
 ## Create STF Cluster
 
