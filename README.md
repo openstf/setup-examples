@@ -57,3 +57,4 @@ TODO: Use 2 instances of VM for rethinkdb if somebody complains that this is not
 Please check following host specific docs for STF cluster creation and deployment strategy.
 
 - [CoreOS + Fleet](docs/coreos_fleet.md)
+- [Ubuntu](docs/ubuntu.md)
