@@ -1,0 +1,90 @@
+# -*- mode: ruby -*-
+# -*- coding: utf-8 -*-
+
+require 'fileutils'
+require 'open-uri'
+require 'yaml'
+
+Vagrant.require_version '>= 1.6.0'
+
+CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), 'user-data')
+
+update_channel = 'alpha'
+image_version = 'current'
+vm_memory = 512
+vm_cpus = 1
+
+cluster = [
+  { name: 'core-01', hostname: 'core-01', ip: '172.17.8.101', metadata: 'role=nginx'   },
+  { name: 'core-02', hostname: 'core-02', ip: '172.17.8.102', metadata: 'role=appside' },
+  { name: 'core-03', hostname: 'core-03', ip: '172.17.8.103', metadata: 'role=devside' }
+]
+
+# Used to fetch a new discovery token for a cluster of size 3
+new_discovery_url = "https://discovery.etcd.io/new?size=#{ cluster.size }"
+token = open(new_discovery_url).read
+
+Vagrant.configure('2') do |config|
+  # always use Vagrants insecure key
+  config.ssh.insert_key = false
+
+  config.vm.box = "coreos-%s" % update_channel
+  config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/%s/coreos_production_vagrant.json" % [update_channel, image_version]
+
+  config.vm.provider :virtualbox do |v|
+    # On VirtualBox, we don't have guest additions or a functional vboxsf
+    # in CoreOS, so tell Vagrant that so it can be smarter.
+    v.check_guest_additions = false
+    v.functional_vboxsf     = false
+  end
+
+  cluster.each do |node|
+    config.vm.define node[:name] do |config|
+      config.vm.hostname = node[:hostname]
+
+      config.vm.provider :virtualbox do |v|
+        v.name = node[:name]
+        v.memory = vm_memory
+        v.cpus = vm_cpus
+
+        if node[:name] == 'core-01'
+          # Add usb filter to attach device
+          v.customize ['modifyvm', :id, '--usb', 'on']
+          # Run VBoxManage list usbhost command to get vendor_id and product_id of device
+          # Uncomment below line and add $VENDOR_ID and $PRODUCT_ID of your device
+          # In case of multiple devices, copy and paste below line.
+
+          # v.customize ['usbfilter', 'add', '0', '--target', :id, '--name', $ANY_NAME, '--vendorid', $VENDOR_ID, '--productid', $PRODUCT_ID]
+        end
+      end
+
+      config.vm.network :private_network, ip: node[:ip]
+
+      ## Provisioning
+      # cloudconfig-init
+      data = YAML.load(IO.readlines('user-data')[1..-1].join)
+
+      # Add discovery url
+      data['coreos']['etcd2']['discovery'] = token
+
+      # Add metadata
+      data['coreos']['fleet']['metadata'] = node[:metadata]
+
+      yaml = YAML.dump(data)
+
+      source_file = File.join(File.dirname(__FILE__), "user-data_#{ node[:name] }")
+      FileUtils.rm source_file if File.exists?(source_file)
+      File.open(source_file, 'w') { |file| file.write("#cloud-config\n\n#{ yaml }") }
+
+      config.vm.provision :file, source: source_file, destination: '/tmp/vagrantfile-user-data'
+      config.vm.provision :shell, inline: 'mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/', privileged: true
+
+      if node[:metadata] == 'role=nginx'
+        nginx_conf_file = File.join(File.dirname(__FILE__), 'nginx.conf')
+        config.vm.provision :file, source: nginx_conf_file, destination: '/tmp/nginx.conf'
+        config.vm.provision :shell, inline: 'mkdir -p /srv/nginx', privileged: true
+        config.vm.provision :shell, inline: 'mv /tmp/nginx.conf /srv/nginx/nginx.conf', privileged: true
+      end
+    end
+  end
+end

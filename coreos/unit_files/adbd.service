@@ -1,0 +1,21 @@
+[Unit]
+Description=ADB daemon
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull sorccu/adb:latest
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStart=/usr/bin/docker run --rm \
+  --name %p \
+  --privileged \
+  -v /dev/bus/usb:/dev/bus/usb \
+  --net host \
+  sorccu/adb:latest
+ExecStop=-/usr/bin/docker stop -t 2 %p
+
+[X-Fleet]
+Global=true

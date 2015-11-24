@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+# -*- coding: utf-8 -*-
+
+Vagrant.require_version '>= 1.6.0'
+
+rethinkdb_host_ip = '198.162.50.11'
+
+Vagrant.configure(2) do |config|
+  # always use Vagrants insecure key
+  config.ssh.insert_key = false
+
+  # Ubuntu 14.04, 64 bit
+  config.vm.box         = 'ubuntu/trusty64'
+  config.vm.box_version = '~> 14.04'
+
+  # Set memory to 512
+  # Allow I/O APIC
+  config.vm.provider :virtualbox do |v|
+    v.name = 'rethinkdb_ubuntu'
+    v.customize ['modifyvm', :id, '--memory', '512', '--ioapic', 'on']
+  end
+
+  # Static IP
+  config.vm.network :private_network, ip: rethinkdb_host_ip
+
+  # Provisioning
+  config.vm.provision :shell do |sh|
+    sh.inline = <<-EOF
+      export DEBIAN_FRONTEND=noninteractive;
+
+      # Add RethinkDB Source
+      apt-key adv --fetch-keys http://download.rethinkdb.com/apt/pubkey.gpg 2>&1;
+      echo "deb http://download.rethinkdb.com/apt $(lsb_release -sc) main" > /etc/apt/sources.list.d/rethinkdb.list;
+      apt-get update --assume-yes;
+
+      # RethinkDB Install & Setup
+      apt-get install --assume-yes rethinkdb;
+      sed -e 's/# bind=127.0.0.1/bind=all/g' /etc/rethinkdb/default.conf.sample > /etc/rethinkdb/instances.d/default.conf;
+      rethinkdb create -d /var/lib/rethinkdb/instances.d/default 2>&1;
+
+      # Start rethinkdb
+      service rethinkdb start;
+    EOF
+  end
+end

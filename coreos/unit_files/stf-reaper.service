@@ -1,0 +1,21 @@
+[Unit]
+Description=STF reaper
+After=rethinkdb-proxy-28015.service
+BindsTo=rethinkdb-proxy-28015.service
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+ExecStart=/usr/bin/docker run --rm \
+  --name %p \
+  --link rethinkdb-proxy-28015:rethinkdb \
+  openstf/stf:latest \
+  stf reaper dev \
+    --connect-push tcp://172.17.8.103:7270 \
+    --connect-sub tcp://172.17.8.102:7150 \
+    --heartbeat-timeout 30000
+ExecStop=-/usr/bin/docker stop -t 10 %p

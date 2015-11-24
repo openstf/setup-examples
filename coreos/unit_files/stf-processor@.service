@@ -1,0 +1,23 @@
+Unit]
+Description=STF processor
+After=rethinkdb-proxy-28015.service
+BindsTo=rethinkdb-proxy-28015.service
+
+[Service]
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStart=/usr/bin/docker run --rm \
+  --name %p-%i \
+  --link rethinkdb-proxy-28015:rethinkdb \
+  openstf/stf:latest \
+  stf processor %p-%i \
+    --connect-app-dealer tcp://172.17.8.102:7160 \
+    --connect-dev-dealer tcp://172.17.8.103:7260
+ExecStop=-/usr/bin/docker stop -t 10 %p-%i
+
+[X-Fleet]
+Conflicts=stf-processor@*.service
