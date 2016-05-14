@@ -103,7 +103,7 @@ Note that you need these dependencies even if you've installed STF directly from
 On Ubuntu, you can use ubuntu package to install most of the dependencies:
 
 ```bash
-sudo apt-get update && sudo apt-get install android-tools-adb autoconf automake libtool build-essential libzmq3-dev libprotobuf-dev git graphicsmagick
+sudo apt-get update && sudo apt-get install android-tools-adb libtool libzmq3-dev libprotobuf-dev git graphicsmagick yasm pkg-config
 ```
 Install RethinkDB
 
