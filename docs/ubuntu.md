@@ -122,7 +122,7 @@ sudo apt-get install -y nodejs
 Install additional packages via npm
 
 ```bash
-npm install -g bower karma gulp
+npm install -g bower 
 ```
 
 Install ZeroMQ 
@@ -196,10 +196,16 @@ For development purposes, however, there's a helper command to quickly launch al
 If you don't have RethinkDB set up yet, to start it up, go to the folder where you'd like RethinkDB to create a `rethinkdb_data` folder in (perhaps the folder where this repo is) and run the following command:
 
 ```bash
-rethinkdb
+rethinkdb 
 ```
 
 You should now have RethinkDB running locally. Running the command again in the same folder will reuse the data from the previous session.
+
+Start adb server on seperate terminal using the following command:
+
+```bash
+adb start-server
+```
 
 You're now ready to start up STF itself:
 
