@@ -122,7 +122,7 @@ sudo apt-get install -y nodejs
 Install additional packages via npm
 
 ```bash
-npm install -g bower 
+npm install -g bower karma gulp
 ```
 
 Install ZeroMQ 
