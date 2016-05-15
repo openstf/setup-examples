@@ -119,6 +119,12 @@ Install Node.js v6.x
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
+Install additional packages via npm
+
+```bash
+npm install -g bower karma gulp
+```
+
 Install ZeroMQ 
 
 ```bash
