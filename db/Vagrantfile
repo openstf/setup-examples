@@ -9,15 +9,14 @@ Vagrant.configure(2) do |config|
   # always use Vagrants insecure key
   config.ssh.insert_key = false
 
-  # Ubuntu 14.04, 64 bit
-  config.vm.box         = 'ubuntu/trusty64'
-  config.vm.box_version = '~> 14.04'
+  # Ubuntu 16.04, 64 bit
+  config.vm.box         = "bento/ubuntu-16.04"
 
-  # Set memory to 512
+  # Set memory to 1024
   # Allow I/O APIC
   config.vm.provider :virtualbox do |v|
     v.name = 'rethinkdb_ubuntu'
-    v.customize ['modifyvm', :id, '--memory', '512', '--ioapic', 'on']
+    v.customize ['modifyvm', :id, '--memory', '1024', '--ioapic', 'on']
   end
 
   # Static IP
