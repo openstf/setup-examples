@@ -96,6 +96,7 @@ Above command will submit all the services to fleet. You will see logs something
 Unit adbd.service
 Unit nginx.service inactive
 Unit rethinkdb-proxy-28015.service
+Unit stf-api@.service inactive
 Unit stf-app@.service inactive
 Unit stf-auth@.service inactive
 Unit stf-migrate.service inactive
@@ -140,6 +141,7 @@ Unit stf-websocket@.service inactive
                  stf-storage-plugin-image@3400  \
                  stf-storage-temp@3500          \
                  stf-websocket@3600             \
+                 stf-api@3700
                  stf-provider@{1..3}            \
                  stf-processor@{1..3}           \
                  stf-triproxy-dev               \
@@ -156,6 +158,7 @@ Unit stf-websocket@.service inactive
   - stf-storage-plugin-image
   - stf-storage-temp
   - stf-websocket
+  - stf-api
   - provider@1
   - provider@2
   - provider@3
