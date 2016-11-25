@@ -1,8 +1,8 @@
 ## Smartphone Test Farm Setup Examples
 
-[Smartphone Test Farm](https://github.com/openstf/stf) is a great tool to create on-premise device farm. And also, it is very easy to get started with it using it's `stf local` feature. But the problem is this feature was developed for debugging purpose. Users are not supposed to use it in production environment. It is okay to use it for a small farm of 10 ~ 15 devices with one host machine. But to scale the service you will have to deploy it on a computer cluster.
+[Smartphone Test Farm](https://github.com/openstf/stf) is a great tool to create on-premise device farm. And also, it is very easy to get started with it using it's `stf local` feature. But the problem is, this feature was developed for development purpose. Users are not supposed to use it in production. It is okay to use it for a small farm of 10 ~ 15 devices with one host machine. But to scale you will have to deploy it over a cluster instead.
 
-This project will provide various setup examples for STF in production environment. I will be using [Vagrant](https://www.vagrantup.com/) with [VirtualBox](https://www.virtualbox.org/) provider to create virtual cluster for demonstration.
+This project will provide various setup examples of STF in production environment. I will be using [Vagrant](https://www.vagrantup.com/) with [VirtualBox](https://www.virtualbox.org/) provider to create virtual cluster for demonstration.
 
 ## Assumptions
 - This project assumes that you already have read following nicely written documents. In case you haven't read, it is highly recommended to read them before going ahead.
@@ -12,8 +12,9 @@ This project will provide various setup examples for STF in production environme
   - *Theoritically this can be done on any OS which supports VirtualBox and Vagrant but they haven't been confirmed yet!*
 
 ## Requirements
-- [VirtualBox](https://www.virtualbox.org/) >= 5.4.0
-- [Vagrant](https://www.vagrantup.com/) >= 1.7.3
+- [VirtualBox](https://www.virtualbox.org/) >= 5.1.0
+- [VirtualBox Extension Pack](https://www.virtualbox.org/)
+- [Vagrant](https://www.vagrantup.com/) >= 1.8.5
 
 ## Setup Architecture
 Before going any further, I am going to give you a brief idea about what kind of setups are we going to do. Most of the setups will have two major components.
@@ -42,7 +43,7 @@ cd ./db; vagrant up
 ```
 
 Above command will do following things
-- Download **ubuntu/trusty64** image if image is not present (*this may take time depending on internet speed*)
+- Download **bento/ubuntu-16.04** image if image is not present (*this may take time depending on internet speed*)
 - Launch Ubuntu VM and set its IP to `198.162.50.11`
 - Install and run rethinkdb server
 
@@ -50,7 +51,7 @@ You can confirm if rethinkdb is up by visiting rethinkdb [admin console](http://
 
 Please have a look at [Vagrantfile](db/Vagrantfile) to have better understanding about what is happening.
 
-**TODO**: Use 2 instances of VM for rethinkdb if somebody complains that this is not a real cluster :P
+**TODO**: Use 2 instances of VM for rethinkdb if somebody complains that this is not a real cluster.
 
 ## Create STF Cluster
 

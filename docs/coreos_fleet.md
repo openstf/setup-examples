@@ -10,8 +10,9 @@
 ### Add usb filters
 In order to access real devices from VMs, it is necessary to create usb filters. Update [Vagrantfile](../coreos/Vagrantfile) for this. Instructions are written in file itself.
 
-1. Connect the android device or devices to your OS X and check if they are properly connected by running `adb devices`
-2. Get vendor_id and product_id of devices using `VBoxManage list usbhost` command. It will display something like this
+1. Make sure VirtualBox Extension Pack is installed
+2. Connect the android device or devices to your OS X and check if they are properly connected by running `adb devices`
+3. Get vendor_id and product_id of devices using `VBoxManage list usbhost` command. It will display something like this
 
   ```
   UUID:               e7757772-3030-44a3-ac14-00e53e9e32f8
@@ -27,7 +28,7 @@ In order to access real devices from VMs, it is necessary to create usb filters.
   Current State:      Busy
   ```
 
-3. Uncomment the usbfilter line in [Vagrantfile](../coreos/Vagrantfile) and rewrite it like this.
+4. Uncomment the usbfilter line in [Vagrantfile](../coreos/Vagrantfile) and rewrite it like this.
 
   From:
   ```sh
