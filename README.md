@@ -1,3 +1,9 @@
+# Warning
+
+# This project along with other ones in [OpenSTF](https://github.com/openstf) organisation is provided as is for community, without active development.
+# You can check any other forks that may be actively developed and offer new/different features [here](https://github.com/openstf/stf/network).
+# Active development has been moved to [DeviceFarmer](https://github.com/DeviceFarmer) organisation.
+
 ## Smartphone Test Farm Setup Examples
 
 [Smartphone Test Farm](https://github.com/openstf/stf) is a great tool to create on-premise device farm. And also, it is very easy to get started with it using it's `stf local` feature. But the problem is, this feature was developed for development purpose. Users are not supposed to use it in production. It is okay to use it for a small farm of 10 ~ 15 devices with one host machine. But to scale you will have to deploy it over a cluster instead.
